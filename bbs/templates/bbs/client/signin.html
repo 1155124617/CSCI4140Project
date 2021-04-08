@@ -32,6 +32,13 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
+                {% if message %}
+                    <span class="login100-form-title">
+                        {{ message }}
+                    </span>
+                {% endif %}
+
+
 				<div class="login100-pic js-tilt" data-tilt>
 					<img src="{% static 'images/img-01.png' %}" alt="IMG">
 				</div>
