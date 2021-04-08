@@ -17,6 +17,7 @@ class Client(models.Model):
     name = models.CharField(max_length=20)
     grade = models.IntegerField()
     major = models.CharField(max_length=30)
+    email = models.CharField(max_length=30)
 
     def __str__(self):
         return str(self.name)
@@ -25,6 +26,7 @@ class Client(models.Model):
 class Admin(models.Model):
     password = models.CharField(max_length=20)
     name = models.CharField(max_length=20)
+    email = models.CharField(max_length=30)
 
     def __str__(self):
         return str(self.name)
