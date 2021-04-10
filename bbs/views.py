@@ -41,3 +41,19 @@ def client_sign_up(request):
 def client_profile(request, client_id):
     client = Client.objects.get(id=client_id)
     return HttpResponse(f"This is {client.name}")
+
+def client_main_page(request):
+    context={}
+    if request.method != "POST" and not request.COOKIES.get('userid'):
+        return HttpResponse(status=404)
+    elif not request.COOKIES.get('userid'):
+        context['userid'] = 'UserID : ' + request.POST.get('id')
+        template = loader.get_template('bbs/client/mainpage.html')
+        res = HttpResponse(template.render(context,request))
+        res.set_cookie('userid',request.POST.get('id'))
+        return res
+    else:
+        context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
+        template = loader.get_template('bbs/client/mainpage.html')
+        return HttpResponse(template.render(context,request))
+    

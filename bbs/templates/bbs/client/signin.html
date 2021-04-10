@@ -43,7 +43,8 @@
 					<img src="{% static 'images/img-01.png' %}" alt="IMG">
 				</div>
 
-				<form class="login100-form validate-form" action="../main_page/index.html" method="get">
+				<form class="login100-form validate-form" action="../main_page/" method="POST">
+					{% csrf_token %}
                     <span class="login100-form-title">
                         BBS Login
                     </span>
