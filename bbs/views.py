@@ -55,10 +55,16 @@ def client_main_page(request):
         return HttpResponse(status=404)
     elif not request.COOKIES.get('userid'):
         context['userid'] = 'UserID : ' + request.POST.get('id')
-        template = loader.get_template('bbs/client/mainpage.html')
-        res = HttpResponse(template.render(context,request))
-        res.set_cookie('userid',request.POST.get('id'))
-        return res
+        try:
+            client = Client.objects.get(id=request.POST['id'],password=request.POST['pass'])
+            template = loader.get_template('bbs/client/mainpage.html')
+            res = HttpResponse(template.render(context,request))
+            res.set_cookie('userid',request.POST.get('id'))
+            return res
+        except:
+            print('wrong pass')
+            res = redirect('../signin/')
+            return res
     else:
         context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
         template = loader.get_template('bbs/client/mainpage.html')
