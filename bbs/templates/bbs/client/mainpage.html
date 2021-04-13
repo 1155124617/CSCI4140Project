@@ -50,7 +50,7 @@
               <img src="{% static 'mainpage/images/faces/face28.jpg' %}" alt="profile"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown" id="logout">
-              <a class="dropdown-item" href="../signin/">
+              <a class="dropdown-item" href="../signout/">
                   <!-- Return the login page here!! -->
                 <i class="ti-power-off text-primary"></i>
                 Logout
@@ -95,8 +95,10 @@
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
                     <!-- All reflinks should be changed afterwhile -->
-                    <li class="nav-item"> <a class="nav-link active" href="buttons.html">Devtour</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="chatboard.html">Chat Board</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="../UserBorrow&Return/">Book Borrow & Return</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="chatboard.html">Book Transfer among Users</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="../BookInformationRetrieval/">Book Information Retrieval</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="chatboard.html">Book Reservation</a></li>
                 </ul>
             </div>
           </li>
