@@ -87,22 +87,33 @@ def look_up_books(request):
         return HttpResponse(status=404)
     else:
         try:
-            book = Book.objects.get(name=request.POST['book_name'])
-            context['message'] = 'Successfully find the book named ' + request.POST['book_name']
-            context['bookname'] = book.name
-            context['bookid'] = book.id
-            context['bookdesc'] = book.description
-            context['bookloc'] = book.location
-            context['bookborrowerid'] = book.borrower_id
-            context['is_public'] = book.is_public
-            print(book)
-            template = loader.get_template('bbs/client/RetrievalResult.html')
-            return HttpResponse(template.render(context,request))
+            if(request.POST['book_id']):
+                book = Book.objects.get(id=request.POST['book_id'])
+                context['message'] = 'Successfully find the book with id ' + request.POST['book_id']
+                context['bookname'] = book.name
+                context['bookid'] = book.id
+                context['bookdesc'] = book.description
+                context['bookloc'] = book.location
+                context['bookborrowerid'] = book.borrower_id
+                context['is_public'] = book.is_public
+                template = loader.get_template('bbs/client/RetrievalResult.html')
+                return HttpResponse(template.render(context,request))
+            else:
+                book = Book.objects.get(name=request.POST['book_name'],location=request.POST['book_location'])
+                context['message'] = 'Successfully find the book with name ' + request.POST['book_name']
+                context['bookname'] = book.name
+                context['bookid'] = book.id
+                context['bookdesc'] = book.description
+                context['bookloc'] = book.location
+                context['bookborrowerid'] = book.borrower_id
+                context['is_public'] = book.is_public
+                template = loader.get_template('bbs/client/RetrievalResult.html')
+                return HttpResponse(template.render(context,request))
 
         except ObjectDoesNotExist:
             print('ERROR')
             template = loader.get_template('bbs/client/BookInformationRetrieval.html')
-            context['message'] = "No book named " + request.POST['book_name'] 
+            context['message'] = "No satisfied book, please try other words"
             return HttpResponse(template.render(context,request))
 
 
