@@ -147,24 +147,15 @@
                         </div>
                         <div>
                             <ul class="list-group">
-                                {% if bookname %}
-                                <li class="list-group-item list-group-item-success"> Book name : {{ bookname }}</li>
-                                {% endif %}
-                                {% if bookid %}
-                                <li class="list-group-item list-group-item-secondary"> Book ID :  {{ bookid }}</li>
-                                {% endif %}
-                                {% if bookdesc %}
-                                <li class="list-group-item list-group-item-info"> Book Description : {{ bookdesc }}</li>
-                                {% endif %}
-                                {% if bookloc %}
-                                <li class="list-group-item list-group-item-warning"> Book Location : {{ bookloc }}</li>
-                                {% endif %}
-                                {% if bookborrowerid %}
-                                <li class="list-group-item list-group-item-danger"> Book Borrower's ID : {{ bookborrowerid}}</li>
-                                {% endif %}
-                                {% if is_public %}
-                                <li class="list-group-item list-group-item-primary"> Book is public : {{ is_public }}</li>
-                                {% endif %}
+                                {% for book in books %}
+                                <li class="list-group-item list-group-item-success"> Book name : {{ book.name }}</li>
+                                <li class="list-group-item list-group-item-secondary"> Book ID :  {{ book.id }}</li>
+                                <li class="list-group-item list-group-item-info"> Book Description : {{ book.description }}</li>
+                                <li class="list-group-item list-group-item-warning"> Book Location : {{ book.location }}</li>
+                                <li class="list-group-item list-group-item-danger"> Book Borrower's ID : {{ book.borrower_id }}</li>
+                                <li class="list-group-item list-group-item-primary"> Book is public : {{ book.is_public }}</li>
+                                <li class="list-group-item list-group-item-dark"></li>
+                                {% endfor %}
                             </ul>
                         </div>
                         <a href = '../BookInformationRetrieval/'>Start a new search</a>
