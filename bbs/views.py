@@ -48,6 +48,7 @@ def client_profile(request, client_id):
     client = Client.objects.get(id=client_id)
     return HttpResponse(f"This is {client.name}")
 
+
 def client_main_page(request):
     context={}
     if request.method != "POST" and not request.COOKIES.get('userid'):
@@ -63,29 +64,40 @@ def client_main_page(request):
         template = loader.get_template('bbs/client/mainpage.html')
         return HttpResponse(template.render(context,request))
 
+
 def client_sign_out(request):
     context={}
     response = redirect('../signin')
     response.delete_cookie('userid')
     return response
 
+
 def user_borrow_return(request):
     context = {}
     context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
+    books = Book.objects.filter(borrower_id=request.COOKIES.get('userid'))
+    context['books'] = books
+    if len(books) != 0:
+        context['message'] = "Below are book(s) that you have borrowed"
+    else:
+        context['message'] = "You haven't borrowed any book"
     template = loader.get_template('bbs/client/UserBorrow&Return.html')
     return HttpResponse(template.render(context,request))
+
 
 def book_information_retrieval(request):
     context = {}
     context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
     template = loader.get_template('bbs/client/BookInformationRetrieval.html')
     return HttpResponse(template.render(context,request))
-    
+
+
 def look_up_books(request):
     context = {}
     if request.method != 'POST':
         return HttpResponse(status=404)
     else:
+        context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
         try:
             if request.POST['book_id']:
                 books = Book.objects.filter(id=request.POST['book_id'])
@@ -130,4 +142,28 @@ def look_up_books(request):
             return HttpResponse(template.render(context,request))
 
 
-    
+def borrow_return(request):
+    context = {}
+    if request.method != 'POST':
+        return HttpResponse(status=404)
+    else:
+        if request.POST['form_method'] == 'Borrow':
+            try:
+                book = Book.objects.get(id=request.POST['book_id'],borrower_id=0)
+                book.borrower_id = request.COOKIES.get('userid')
+                book.save()
+                context['message'] = 'You have successfully borrowed the book'
+            except:
+                context['message'] = 'The requested book has been borrowed by the other one'
+
+        else:
+            try:
+                book = Book.objects.get(id=request.POST['book_id'],borrower_id=request.COOKIES.get('userid'))
+                book.borrower_id = 0
+                book.save()
+                context['message'] = 'You have successfully returned the book'
+            except:
+                context['message'] = 'You currently do not have this book borrowed or you have returned it already'
+
+    template = loader.get_template('bbs/client/Borrow&ReturnResult.html')
+    return HttpResponse(template.render(context,request))
