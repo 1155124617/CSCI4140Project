@@ -147,24 +147,26 @@
                             {% endif %}
                         </div>
                         <div>
-                            {% if bookname %}
-                            <a> Book name : {{ bookname }}</a><br/>
-                            {% endif %}
-                            {% if bookid %}
-                            <a> Book ID :  {{ bookid }}</a><br/>
-                            {% endif %}
-                            {% if bookdesc %}
-                            <a> Book Description : {{ bookdesc }}</a><br/>
-                            {% endif %}
-                            {% if bookloc %}
-                            <a> Book Location : {{ bookloc }}</a><br/>
-                            {% endif %}
-                            {% if bookborrowerid %}
-                            <a> Book Borrower's ID : {{ bookborrowerid}}</a><br/>
-                            {% endif %}
-                            {% if is_public %}
-                            <a> Book is public : {{ is_public }}</a><br/>
-                            {% endif %}
+                            <ul class="list-group">
+                                {% if bookname %}
+                                <li class="list-group-item list-group-item-success"> Book name : {{ bookname }}</li>
+                                {% endif %}
+                                {% if bookid %}
+                                <li class="list-group-item list-group-item-secondary"> Book ID :  {{ bookid }}</li>
+                                {% endif %}
+                                {% if bookdesc %}
+                                <li class="list-group-item list-group-item-info"> Book Description : {{ bookdesc }}</li>
+                                {% endif %}
+                                {% if bookloc %}
+                                <li class="list-group-item list-group-item-warning"> Book Location : {{ bookloc }}</li>
+                                {% endif %}
+                                {% if bookborrowerid %}
+                                <li class="list-group-item list-group-item-danger"> Book Borrower's ID : {{ bookborrowerid}}</li>
+                                {% endif %}
+                                {% if is_public %}
+                                <li class="list-group-item list-group-item-primary"> Book is public : {{ is_public }}</li>
+                                {% endif %}
+                            </ul>
                         </div>
                         <a href = '../BookInformationRetrieval/'>Start a new search</a>
                     </div>

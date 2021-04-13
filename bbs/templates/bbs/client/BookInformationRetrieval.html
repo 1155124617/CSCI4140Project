@@ -21,6 +21,12 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="{% static 'mainpage/css/vertical-layout-light/style.css' %}">
     <!-- endinject -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script src="https://cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <link rel="stylesheet" href="{% static 'mainpage/css/style.css' %}" type="text/css" media="screen" />
@@ -151,29 +157,27 @@
                                     Book Information Retrieval
                                 </span>
             
-                                <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter again">
-                                    <input class="input100" type="text" name="book_name" placeholder="BOOK NAME (Mandatory)">
+                                <div class="form-group" data-validate="Please enter again">
+                                    <input class="form-control" type="text" name="book_name" placeholder="BOOK NAME (Mandatory)">
                                         <span class="focus-input100"></span>
                                 </div>
             
-                                <div class="wrap-input100 validate-input m-b-16" data-validate = "Please enter again">
-                                    <input class="input100" type="text" name="book_id" placeholder="BOOK ID">
+                                <div class="form-group" data-validate = "Please enter again">
+                                    <input class="form-control" type="text" name="book_id" placeholder="BOOK ID">
                                         <span class="focus-input100"></span>
                                 </div>
             
-                                <div class="wrap-input100 validate-input m-b-16" data-validate = "Please enter again">
-                                    <input class="input100" type="text" name="book_location" placeholder="BOOK LOCATION">
+                                <div class="form-group" data-validate = "Please enter again">
+                                    <input class="form-control" type="text" name="book_location" placeholder="BOOK LOCATION">
                                         <span class="focus-input100"></span>
                                 </div>
             
                                 <div class="text-right p-t-13 p-b-23">
                                 </div>
             
-                                <div class="container-login100-form-btn">
-                                    <button class="login100-form-btn">
-                                        Retrieve Information
-                                    </button>
-                                </div>
+                                <button class="btn btn-primary" type="submit">
+                                    Retrieve Information
+                                </button>
                             </form>
                         </div>
                     </div>
