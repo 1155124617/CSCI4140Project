@@ -149,12 +149,12 @@
                         </div>
                         <div>
                             {% if message %}
-                            <a>{{ message }}</a>
+                            <h4 class="text-danger">{{ message }}</h4>
                             {% endif %}
                             <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../lookupbooks/" method="POST">
                                 {% csrf_token %}
                                 <span class="login100-form-title">
-                                    Book Information Retrieval
+                                    <h4 class="text-info">Book Information Retrieval</h4>
                                 </span>
             
                                 <div class="form-group" data-validate="Please enter again">
