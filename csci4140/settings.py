@@ -22,6 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '7@8uz&l3_h^q#@kvipnf3wxj!n4v-nx4!8x&&(8sik)kg@74)o'
 
+EASY_MAPS_GOOGLE_KEY = 'AIzaSyDSPu1XiUzZpZbUfKEAGhObkZwXs6ukPEo'
+#EASY_MAPS_CENTER = (-41.3, 32)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -37,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'easy_maps',
     'bbs.apps.BbsConfig',
     
 ]

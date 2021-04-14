@@ -50,6 +50,11 @@
     </script>
     <script src="{% static 'mainpage/js/Script1.js' %}"></script>
     <script src="{% static 'mainpage/buttons.js' %}"></script>
+    <script>
+        console.exception = function(str){
+            console.log(str);
+        };
+    </script>
 </head>
 <body>
     <div class="container-scroller">
@@ -140,7 +145,7 @@
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <h3 class="font-weight-bold">Welcome to Book Borrow and Return System! </h3>
+                    <h3 class="font-weight-bold">Welcome to Book Transfer System! </h3>
                     <div>
                         <div style="text-align:center;clear:both">
                         </div>
@@ -149,7 +154,7 @@
                             {% if message %}
                             <h4 class="text-danger">{{ message }}</h4>
                             {% endif %}
-                            <a href='../UserBorrow&Return/'>Go Back</a>
+                            <a href = '../booktransfer/'>Go Back</a>
                         </div>
                     </div>
                 </div>

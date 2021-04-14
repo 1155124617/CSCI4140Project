@@ -1,13 +1,16 @@
 from django.shortcuts import render
 from .models import Client
 from .models import Book
+from .models import TransferRequest
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404,render
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 import requests
-
+import time
+from bs4 import BeautifulSoup
+import socket
 
 def index(request):
     return HttpResponse("Hello, world. You're at the bbs index.")
@@ -173,3 +176,106 @@ def borrow_return(request):
 
     template = loader.get_template('bbs/client/Borrow&ReturnResult.html')
     return HttpResponse(template.render(context,request))
+
+
+def book_transfer(request):
+    context = {}
+    context['userid'] = "User ID : " + request.COOKIES.get('userid')
+    books = Book.objects.filter(borrower_id=request.COOKIES.get('userid'))
+    
+    req = set()
+    flag = 0
+    for book in books:
+        result = TransferRequest.objects.filter(book_name=book.name)
+        if len(result) != 0:
+            if flag == 0:
+                req = result
+                flag += 1
+            else:
+                req.join(result)
+    context['requests'] = req
+
+    if len(req) != 0:
+        context['message'] = "Below are book(s) that you have borrowed which are requested by others"
+    else:
+        context['message'] = "There are no requests related to the books that you borrowed"
+
+    template = loader.get_template('bbs/client/BookTransfer.html')
+    return HttpResponse(template.render(context,request))
+
+def book_transfer_accept(request):
+    context = {}
+    context['userid'] = "User ID : " + request.COOKIES.get('userid')
+    if request.method != 'POST':
+        return HttpResponse(status=404)
+    else:
+        try:
+            req = TransferRequest.objects.get(id=request.POST['request_id'])
+            req.delete()
+            context['message'] = "Accept Successfully!"
+        except:
+            context['message'] = "The request id doesn't exit!"
+        
+        template = loader.get_template("bbs/client/BookTransferAccept.html")
+        return HttpResponse(template.render(context,request))
+
+
+def book_transfer_request(request):
+    context = {}
+    context['userid'] = "User ID : " + request.COOKIES.get('userid')
+    if request.method != 'POST':
+        return HttpResponse(status=404)
+    else:
+        try:
+            request_time = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))
+            
+            #request_location = get_geolocation_for_ip(get_client_ip(request))
+            request_location = "default"
+
+            request_id = request.COOKIES.get('userid')
+
+            bookname = request.POST['book_name']
+
+            message = request.POST['message']
+
+            new_request = TransferRequest(
+                borrower_id=request_id,
+                book_name=bookname,
+                request_time=request_time,
+                location=request_location,
+                message=message
+            )
+            new_request.save()
+            context['message'] = "Request Successfully!"
+        except Exception as e:
+            context['message'] = "The Request Failed!"
+            print(e)
+
+        template = loader.get_template("bbs/client/BookTransferAccept.html")
+        return HttpResponse(template.render(context,request))
+
+
+
+def get_client_ip(request):
+    """x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    print(ip)"""
+    """get the local network ip, not loopback 127.*"""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(('1.1.1.1',80))
+    ip = s.getsockname()[0]
+    s.close()
+    print(ip)
+    return ip
+
+
+def get_geolocation_for_ip(ip):
+    url = f"http://api.ipstack.com/{ip}?access_key=85ff54066f8dc0da257a663731051620"
+    print(url)
+    response = requests.get(url)
+    print(response)
+    response.raise_for_status()
+    return response.json()

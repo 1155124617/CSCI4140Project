@@ -50,6 +50,11 @@
     </script>
     <script src="{% static 'mainpage/js/Script1.js' %}"></script>
     <script src="{% static 'mainpage/buttons.js' %}"></script>
+    <script>
+        console.exception = function(str){
+            console.log(str);
+        };
+    </script>
 </head>
 <body>
     <div class="container-scroller">
@@ -140,7 +145,7 @@
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <h3 class="font-weight-bold">Welcome to Book Borrow and Return System! </h3>
+                    <h3 class="font-weight-bold">Welcome to Book Transfer System! </h3>
                     <div>
                         <div style="text-align:center;clear:both">
                         </div>
@@ -149,7 +154,60 @@
                             {% if message %}
                             <h4 class="text-danger">{{ message }}</h4>
                             {% endif %}
-                            <a href='../UserBorrow&Return/'>Go Back</a>
+                            <ul class="list-group">
+                                {% for request in requests %}
+                                <li class="list-group-item list-group-item-success"> Request ID : {{ request.id }}</li>
+                                <li class="list-group-item list-group-item-success"> Book name : {{ request.book_name }}</li>
+                                <li class="list-group-item list-group-item-secondary"> Borrower ID :  {{ request.borrower_id }}</li>
+                                <li class="list-group-item list-group-item-info"> Request time : {{ request.request_time }}</li>
+                                <li class="list-group-item list-group-item-warning"> Location : {{ request.location }}</li>
+                                <li class="list-group-item list-group-item-danger"> Request Message : {{ request.message }}</li>
+                                <li class="list-group-item list-group-item-dark"></li>
+                                {% endfor %}
+                            </ul>
+                            <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../booktransferaccept/" method="POST">
+                                {% csrf_token %}
+                                <span class="login100-form-title">
+                                    <h4 class="text-info">Book Transfer Accept Form</h4>
+                                </span>
+            
+                                <div class="form-group" data-validate = "Please enter again">
+                                    <input class="form-control" type="text" name="request_id" placeholder="REQUEST ID">
+                                        <span class="focus-input100"></span>
+                                </div>
+                                <div class="text-right p-t-13 p-b-23">
+                                </div>
+            
+                                <button class="btn btn-primary" type="submit">
+                                    Accept the Request
+                                </button>
+                            </form>
+
+                            <br/>
+
+                            <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../booktransferrequest/" method="POST">
+                                {% csrf_token %}
+                                <span class="login100-form-title">
+                                    <h4 class="text-info">Book Transfer Request Form</h4>
+                                </span>
+            
+                                <div class="form-group" data-validate = "Please enter again">
+                                    <input class="form-control" type="text" name="book_name" placeholder="BOOK NAME">
+                                        <span class="focus-input100"></span>
+                                </div>
+            
+                                <div class="form-group">
+                                    <label for="message">Comment:</label>
+                                    <textarea class="form-control" rows="5" id="message" name="message"></textarea>
+                                  </div>
+
+                                <div class="text-right p-t-13 p-b-23">
+                                </div>
+            
+                                <button class="btn btn-primary" type="submit">
+                                    Request for The Book
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

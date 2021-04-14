@@ -12,5 +12,8 @@ urlpatterns = [
     path('client/UserBorrow&Return/',views.user_borrow_return,name='UserBorrow&Return'),
     path('client/BookInformationRetrieval/',views.book_information_retrieval,name='BookInformationRetrieval'),
     path('client/lookupbooks/',views.look_up_books,name='lookupbooks'),
-    path('client/borrow&return/',views.borrow_return,name='borrow&return')
+    path('client/borrow&return/',views.borrow_return,name='borrow&return'),
+    path('client/booktransfer/',views.book_transfer,name="booktransfer"),
+    path('client/booktransferaccept/',views.book_transfer_accept,name="booktransferaccept"),
+    path('client/booktransferrequest/',views.book_transfer_request,name="booktransferrequest")
 ]
