@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'easy_maps',
     'bbs.apps.BbsConfig',
-    'django_google_maps',
     
 ]
 
