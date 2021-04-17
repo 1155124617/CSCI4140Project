@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Client
 from .models import Book
 from .models import TransferRequest
+from .models import Transfer
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404,render
@@ -181,7 +182,7 @@ def borrow_return(request):
 def book_transfer(request):
     context = {}
     context['userid'] = "User ID : " + request.COOKIES.get('userid')
-    books = Book.objects.filter(borrower_id=request.COOKIES.get('userid'))
+    books = Book.objects.filter(borrower_id=request.COOKIES.get('userid'),is_public=True)
     
     req = set()
     flag = 0
@@ -211,6 +212,20 @@ def book_transfer_accept(request):
     else:
         try:
             req = TransferRequest.objects.get(id=request.POST['request_id'])
+            new_transfer = Transfer(
+                transfer_time = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())),
+                borrower_id = req.borrower_id,
+                lender_id = request.COOKIES.get('userid'),
+                book_id = Book.objects.get(
+                    name = req.book_name, 
+                    borrower_id = request.COOKIES.get('userid'),
+                    is_public=True
+                ).id,
+                img = "NULL",
+                borrower_confirm = False,
+                lender_confirm = False
+            )
+            new_transfer.save()
             req.delete()
             context['message'] = "Accept Successfully!"
         except:
