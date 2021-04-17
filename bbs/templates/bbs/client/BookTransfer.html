@@ -3,6 +3,8 @@
 <html lang="en">
 
 <head>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -208,6 +210,50 @@
                                     Request for The Book
                                 </button>
                             </form>
+                            <!-- Google Map API start -->
+
+
+                            <div id="menu">
+                                <div id="map"  style='width: 400px; height: 300px;'></div>
+
+                                <input id="satellite-v9" type="radio" name="rtoggle" value="satellite" checked="checked">
+                                <!-- See a list of Mapbox-hosted public styles at -->
+                                <!-- https://docs.mapbox.com/api/maps/styles/#mapbox-styles -->
+                                <label for="satellite-v9">satellite</label>
+                                <input id="light-v10" type="radio" name="rtoggle" value="light">
+                                <label for="light-v10">light</label>
+                                <input id="dark-v10" type="radio" name="rtoggle" value="dark">
+                                <label for="dark-v10">dark</label>
+                                <input id="streets-v11" type="radio" name="rtoggle" value="streets">
+                                <label for="streets-v11">streets</label>
+                                <input id="outdoors-v11" type="radio" name="rtoggle" value="outdoors">
+                                <label for="outdoors-v11">outdoors</label>
+                            </div>
+
+                            <script>
+                                mapboxgl.accessToken = 'pk.eyJ1IjoidHJveWhhbiIsImEiOiJja25sdXQzdGowa3hsMm9sdDgyYTRvZnIyIn0.R8-aIVLay5A7P1g3i4EmUQ';
+                                var map = new mapboxgl.Map({
+                                    container: 'map', // container ID
+                                    style: 'mapbox://styles/mapbox/satellite-v9', // style URL
+                                    center: [-2.81361, 36.77271], // starting position [lng, lat]
+                                    zoom: 13 // starting zoom
+                                });
+                                map.addControl(new mapboxgl.NavigationControl());
+
+                                var layerList = document.getElementById('menu');
+                                var inputs = layerList.getElementsByTagName('input');
+
+                                function switchLayer(layer) {
+                                var layerId = layer.target.id;
+                                    map.setStyle('mapbox://styles/mapbox/' + layerId);
+                                }
+
+                                for (var i = 0; i < inputs.length; i++) {
+                                    inputs[i].onclick = switchLayer;
+                                }
+                            </script>
+                            <!-- Google Map API start -->
+
                         </div>
                     </div>
                 </div>

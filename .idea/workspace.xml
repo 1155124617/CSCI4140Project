@@ -2,11 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5d1ee00-fa0e-4b63-98a0-22bf37514905" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/csci4140.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/csci4140.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bbs/templates/bbs/client/signin.html" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/templates/bbs/client/signin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bbs/templates/bbs/client/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/templates/bbs/client/signup.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bbs/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bbs/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bbs/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bbs/templates/bbs/client/BookTransfer.html" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/templates/bbs/client/BookTransfer.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bbs/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/csci4140/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/csci4140/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +88,7 @@
       <workItem from="1617530884069" duration="9170000" />
       <workItem from="1617864046890" duration="3005000" />
       <workItem from="1617867066606" duration="11284000" />
+      <workItem from="1618666336046" duration="5678000" />
     </task>
     <task id="LOCAL-00001" summary="set up database and finished init test">
       <created>1617867398199</created>

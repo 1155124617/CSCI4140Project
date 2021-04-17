@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'easy_maps',
     'bbs.apps.BbsConfig',
+    'django_google_maps',
     
 ]
 
@@ -125,3 +126,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+GOOGLE_MAPS_API_KEY = 'AIzaSyAM9XW6wubPrv8KuLaQciGMRtgyyJbmwbI'

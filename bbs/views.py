@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 import requests
 import time
-from bs4 import BeautifulSoup
+
 import socket
 
 def index(request):
