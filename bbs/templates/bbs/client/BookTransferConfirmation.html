@@ -3,9 +3,6 @@
 <html lang="en">
 
 <head>
-    <!-- MapBox -->
-    <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -149,161 +146,88 @@
             <div class="main-panel">
                 <div class="content-wrapper">
                     <h3 class="font-weight-bold">Welcome to Book Transfer System! </h3>
-                    <a href="../booktransferconfirmation/">Go to Book Transfer Confirmation</a>
                     <div>
                         <div style="text-align:center;clear:both">
                         </div>
                         <div style="text-align:center">
                         </div>
-                            {% if message %}
-                            <h4 class="text-danger">{{ message }}</h4>
+                            {% if warning %}
+                            <h3 class="text-danger">{{ warning }}</h3>
+                            {% endif %}
+
+                            {% if message_lender %}
+                            <h4 class="text-danger">{{ message_lender }}</h4>
                             {% endif %}
                             <ul class="list-group">
-                                {% for request in requests %}
-                                <li class="list-group-item list-group-item-success"> Request ID : {{ request.id }}</li>
-                                <li class="list-group-item list-group-item-success"> Book name : {{ request.book_name }}</li>
-                                <li class="list-group-item list-group-item-secondary"> Borrower ID :  {{ request.borrower_id }}</li>
-                                <li class="list-group-item list-group-item-info"> Request time : {{ request.request_time }}</li>
-                                <li class="list-group-item list-group-item-warning"> Location : {{ request.location }}</li>
-                                <li class="list-group-item list-group-item-danger"> Request Message : {{ request.message }}</li>
+                                {% for transfer in transfers_lender %}
+                                <li class="list-group-item list-group-item-success"> Transfer ID : {{ transfer.id }}</li>
+                                <li class="list-group-item list-group-item-success"> Accept time : {{ transfer.transfer_time}}</li>
+                                <li class="list-group-item list-group-item-secondary"> Borrower ID :  {{ transfer.borrower_id }}</li>
+                                <li class="list-group-item list-group-item-info"> Book ID : {{ transfer.book_id }}</li>
+                                <li class="list-group-item list-group-item-info"> Borrower Confirm : {{ transfer.borrower_confirm }}</li>
+                                <li class="list-group-item list-group-item-info"> Lender Confirm : {{ transfer.lender_confirm }}</li>
                                 <li class="list-group-item list-group-item-dark"></li>
                                 {% endfor %}
                             </ul>
-                            <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../booktransferaccept/" method="POST">
+                            {% if message_borrower %}
+                            <h4 class="text-danger">{{ message_borrower }}</h4>
+                            {% endif %}
+                            <ul class="list-group">
+                                {% for transfer in transfers_borrower %}
+                                <li class="list-group-item list-group-item-success"> Transfer ID : {{ transfer.id }}</li>
+                                <li class="list-group-item list-group-item-success"> Accept time : {{ transfer.transfer_time}}</li>
+                                <li class="list-group-item list-group-item-secondary"> Lender ID :  {{ transfer.lender_id }}</li>
+                                <li class="list-group-item list-group-item-info"> Book ID : {{ transfer.book_id }}</li>
+                                <li class="list-group-item list-group-item-info"> Borrower Confirm : {{ transfer.borrower_confirm }}</li>
+                                <li class="list-group-item list-group-item-info"> Lender Confirm : {{ transfer.lender_confirm }}</li>
+                                <li class="list-group-item list-group-item-dark"></li>
+                                {% endfor %}
+                            </ul>
+
+                            <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../booktransferconfirmation/" method="POST" enctype="multipart/form-data" >
                                 {% csrf_token %}
                                 <span class="login100-form-title">
-                                    <h4 class="text-info">Book Transfer Accept Form</h4>
+                                    <h4 class="text-info">Book Transfer Lender Confirm Form</h4>
                                 </span>
             
                                 <div class="form-group" data-validate = "Please enter again">
-                                    <input class="form-control" type="text" name="request_id" placeholder="REQUEST ID">
+                                    <input class="form-control" type="text" name="lender_transfer_id" placeholder="TRANSFER ID">
                                         <span class="focus-input100"></span>
                                 </div>
+
+                                <h5 class="text-danger">Please upload your confirmed image</h5>
+                                <div class="form-group" data-validate = "Please enter again">
+                                    <input class="form-control" type="file" name="image" accept="image/png, image/jpg, image/jpeg">
+                                        <span class="focus-input100"></span>
+                                </div>
+
                                 <div class="text-right p-t-13 p-b-23">
                                 </div>
             
                                 <button class="btn btn-primary" type="submit">
-                                    Accept the Request
+                                    Confirm the Transfer
                                 </button>
                             </form>
-
                             <br/>
-
-                            <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../booktransferrequest/" method="POST">
+                            <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../booktransferconfirmation/" method="POST">
                                 {% csrf_token %}
                                 <span class="login100-form-title">
-                                    <h4 class="text-info">Book Transfer Request Form</h4>
+                                    <h4 class="text-info">Book Transfer Borrower Confirm Form</h4>
                                 </span>
             
                                 <div class="form-group" data-validate = "Please enter again">
-                                    <input class="form-control" type="text" name="book_name" placeholder="BOOK NAME">
+                                    <input class="form-control" type="text" name="borrower_transfer_id" placeholder="TRANSFER ID">
                                         <span class="focus-input100"></span>
                                 </div>
-
-                                <div class="form-group" data-validate = "Please enter again">
-                                    <input class="form-control" type="text" id="Location" name="Location" placeholder="LOCATION">
-                                        <span class="focus-input100"></span>
-                                </div>
-                                <h5 class="text-info">You may click the button on the top-right corner of the map below to fetch your current location</h5>
-                                <div class="form-group">
-                                    <label for="message">Comment:</label>
-                                    <textarea class="form-control" rows="5" id="message" name="message"></textarea>
-                                  </div>
-
                                 <div class="text-right p-t-13 p-b-23">
                                 </div>
             
                                 <button class="btn btn-primary" type="submit">
-                                    Request for The Book
+                                    Confirm the Transfer
                                 </button>
                             </form>
-                            <!-- MapBox start -->
 
-                            <div id="menu">
-                                <div id="map"  style='width: 400px; height: 300px;'></div>
-
-                                <input id="satellite-v9" type="radio" name="rtoggle" value="satellite" checked="checked">
-                                <!-- See a list of Mapbox-hosted public styles at -->
-                                <!-- https://docs.mapbox.com/api/maps/styles/#mapbox-styles -->
-                                <label for="satellite-v9">satellite</label>
-                                <input id="light-v10" type="radio" name="rtoggle" value="light">
-                                <label for="light-v10">light</label>
-                                <input id="dark-v10" type="radio" name="rtoggle" value="dark">
-                                <label for="dark-v10">dark</label>
-                                <input id="streets-v11" type="radio" name="rtoggle" value="streets">
-                                <label for="streets-v11">streets</label>
-                                <input id="outdoors-v11" type="radio" name="rtoggle" value="outdoors">
-                                <label for="outdoors-v11">outdoors</label>
-                            </div>
-
-                            <script>
-                                mapboxgl.accessToken = 'pk.eyJ1IjoidHJveWhhbiIsImEiOiJja25sdXQzdGowa3hsMm9sdDgyYTRvZnIyIn0.R8-aIVLay5A7P1g3i4EmUQ';
-                                var map = new mapboxgl.Map({
-                                    container: 'map', // container ID
-                                    style: 'mapbox://styles/mapbox/satellite-v9', // style URL
-                                    center: [114.2, 22.4], // CUHK location
-                                    zoom: 13 // starting zoom
-                                });
-
-                                var geolocate = new mapboxgl.GeolocateControl({
-                                        positionOptions: {
-                                            enableHighAccuracy: true
-                                        },
-                                        trackUserLocation: true
-                                    });
-                                map.addControl(geolocate);
-                                geolocate.on('geolocate', function(e) {
-                                      var lon = e.coords.longitude;
-                                      var lat = e.coords.latitude
-                                      var position = [lon, lat];
-                                      console.log(position);
-                                      //var marker = new mapboxgl.Marker().setLngLat([lon,lat]).addTo(map);
-                                      var loc = document.getElementById('Location')
-                                      loc.value = position
-                                });
-
-                                var layerList = document.getElementById('menu');
-                                var inputs = layerList.getElementsByTagName('input');
-
-                                function switchLayer(layer) {
-                                    var layerId = layer.target.id;
-                                    map.setStyle('mapbox://styles/mapbox/' + layerId);
-                                }
-
-                                for (var i = 0; i < inputs.length; i++) {
-                                    inputs[i].onclick = switchLayer;
-                                }
-                            </script>
-                            <!-- MapBox End -->
-                            {% for request in requests %}
-                            <div id="temp-div" style="display: none;">
-                                <a id="temp-id">{{ request.id }}</a>
-                                <a id="temp-name">{{ request.book_name }}</a>
-                                <a id="temp-borrower-id">{{ request.borrower_id }}</a>
-                                <a id="temp-time">{{ request.request_time }}</a>
-                                <a id="temp-location">{{ request.location }}</a>
-                                <a id="temp-message">{{ request.message }}</a>
-                            </div>
-
-                            <script>
-                                var temp_id = document.getElementById('temp-id').innerHTML;
-                                var temp_name = document.getElementById('temp-name').innerHTML;
-                                var temp_borrower_id = document.getElementById('temp-borrower-id').innerHTML;
-                                var temp_time = document.getElementById('temp-time').innerHTML;
-                                var temp_location = document.getElementById('temp-location').innerHTML;
-                                var temp_message = document.getElementById('temp-message').innerHTML;
-                                var lon = temp_location.split(',')[0];
-                                var lat = temp_location.split(',')[1];
-                                var marker = new mapboxgl.Marker().setLngLat([lon,lat]).setPopup(
-                                new mapboxgl.Popup().setHTML("\
-                                    <ul class='list-group'>\
-                                    <li class='list-group-item list-group-item-success'> Request ID : "+temp_id+"</li>\
-                                    </ul>")
-                                ).addTo(map);
-                                var temp_div = document.getElementById('temp-div');
-                                temp_div.remove();
-                            </script>
-                            {% endfor %}
+                            <a href = '../booktransfer/'>Go Back</a>
                         </div>
                     </div>
                 </div>

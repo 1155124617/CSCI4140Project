@@ -12,6 +12,7 @@ import requests
 import time
 from bs4 import BeautifulSoup
 import socket
+import sqlite3
 
 def index(request):
     return HttpResponse("Hello, world. You're at the bbs index.")
@@ -183,17 +184,19 @@ def book_transfer(request):
     context = {}
     context['userid'] = "User ID : " + request.COOKIES.get('userid')
     books = Book.objects.filter(borrower_id=request.COOKIES.get('userid'),is_public=True)
-    
     req = set()
     flag = 0
     for book in books:
         result = TransferRequest.objects.filter(book_name=book.name)
         if len(result) != 0:
-            if flag == 0:
-                req = result
-                flag += 1
-            else:
-                req.join(result)
+            try:
+                transfer = Transfer.objects.get(book_id = book.id)
+            except:
+                if flag == 0:
+                    req = result
+                    flag += 1
+                else:
+                    req |= result
     context['requests'] = req
 
     if len(req) != 0:
@@ -228,8 +231,8 @@ def book_transfer_accept(request):
             new_transfer.save()
             req.delete()
             context['message'] = "Accept Successfully!"
-        except:
-            context['message'] = "The request id doesn't exit!"
+        except Exception as e:
+            context['message'] = "Accept failed"
         
         template = loader.get_template("bbs/client/BookTransferAccept.html")
         return HttpResponse(template.render(context,request))
@@ -269,3 +272,57 @@ def book_transfer_request(request):
         template = loader.get_template("bbs/client/BookTransferAccept.html")
         return HttpResponse(template.render(context,request))
 
+
+def book_transfer_confirmation(request):
+    context = {}
+    if request.method == "POST":
+        try: 
+            request.POST['lender_transfer_id']
+            try:
+                print(request.FILES['image'].read())
+                transfer = Transfer.objects.get(id = request.POST['lender_transfer_id'], lender_id = request.COOKIES['userid']) 
+                transfer.lender_confirm = True
+                transfer.img = sqlite3.Binary(request.FILES['image'].read())
+                transfer.save()
+                if transfer.borrower_confirm == True:
+                    book = Book.objects.get(id = transfer.book_id)
+                    book.borrower_id = transfer.borrower_id
+                    book.save()
+                context['warning'] = "Successfully Confirm"
+            except Exception as e:
+                context['warning'] = e
+                print(e)
+
+        except:
+            try:
+                transfer = Transfer.objects.get(id = request.POST['borrower_transfer_id'], borrower_id = request.COOKIES['userid'])
+                transfer.borrower_confirm = True
+                transfer.save()
+                if transfer.lender_confirm == True:
+                    book = Book.objects.get(id = transfer.book_id)
+                    book.borrower_id = transfer.borrower_id
+                    book.save()
+                context['warning'] = "Successfully Confirm"
+            except:
+                context['warning'] = "Confirmation failed"
+    
+    context['userid'] = "User ID : " + request.COOKIES.get('userid')
+    transfers_lender = Transfer.objects.filter(lender_id = request.COOKIES.get('userid'),lender_confirm=False)
+    transfers_lender |= Transfer.objects.filter(lender_id = request.COOKIES.get('userid'),borrower_confirm=False)
+    transfers_borrower = Transfer.objects.filter(borrower_id = request.COOKIES.get('userid'),lender_confirm=False)
+    transfers_borrower |= Transfer.objects.filter(borrower_id = request.COOKIES.get('userid'),borrower_confirm=False)
+    if len(transfers_lender) == 0:
+        context['message_lender'] = "No lending transfers"
+    else:
+        context['message_lender'] = "Below is your lending transfers"
+    context['transfers_lender']  = transfers_lender
+
+    if len(transfers_borrower) == 0:
+        context['message_borrower'] = "No borrowing transfers"
+    else:
+        context['message_borrower'] = "Below is your borrowing transfers"
+    context['transfers_borrower']  = transfers_borrower
+
+    template = loader.get_template("bbs/client/BookTransferConfirmation.html")
+    return HttpResponse(template.render(context,request))
+    
