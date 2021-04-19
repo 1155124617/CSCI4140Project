@@ -59,3 +59,13 @@ class TransferRequest(models.Model):
     location = models.CharField(max_length=50)
     message = models.CharField(max_length=100)
 
+
+class Reservation(models.Model):
+    borrower_id = models.IntegerField()
+    book_name = models.CharField(max_length=30)
+    is_book_valid = models.BooleanField(default=False)
+    book_id = models.IntegerField(null=True)
+    location = models.CharField(max_length=50)
+    valid_date = models.DateField(null=True)
+    is_finished = models.BooleanField(default=False)
+

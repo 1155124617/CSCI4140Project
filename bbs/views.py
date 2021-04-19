@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Client
 from .models import Book
 from .models import TransferRequest
+from .models import Reservation
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404,render
@@ -9,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 import requests
 import time
+import datetime
 
 import socket
 
@@ -253,3 +255,41 @@ def book_transfer_request(request):
 
         template = loader.get_template("bbs/client/BookTransferAccept.html")
         return HttpResponse(template.render(context,request))
+
+
+def reservations(request):
+    context = {}
+    context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
+    d = datetime.date.today()
+    reservations = Reservation.objects.filter(borrower_id=request.COOKIES.get('userid'), is_finished=False, valid_date__gte=d)
+
+    context['reservations'] = reservations
+    if len(reservations) == 0:
+        context['message'] = "You don't have a reservation"
+    else:
+        context['message'] = "Below are reservation(s) that you have"
+
+    template = loader.get_template('bbs/client/Reservations.html')
+    return HttpResponse(template.render(context, request))
+
+def reservations_borrow(request):
+    context = {}
+    if request.method != 'POST':
+        return HttpResponse(status=404)
+    else:
+        try:
+            reservation = Reservation.objects.get(id=int(request.POST['reservation_id']))
+            reservation.is_finished = True
+            reservation.save()
+            book = Book.objects.get(id=reservation.book_id)
+            book.borrower_id = request.COOKIES.get('userid')
+            book.save()
+            context['message'] = "Success!"
+        except:
+            context['message'] = 'Your reservation is failed. Please apply again.'
+
+
+    context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
+
+    template = loader.get_template('bbs/client/Reservations.html')
+    return HttpResponse(template.render(context, request))
