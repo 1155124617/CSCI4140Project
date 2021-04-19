@@ -151,6 +151,7 @@ def look_up_books(request):
                         if book.borrower_id == 0:
                             context['valid'] = True
                             break
+                    context['book_name'] = request.POST['book_name']
 
                     template = loader.get_template('bbs/client/RetrievalResult.html')
                     return HttpResponse(template.render(context,request))
@@ -177,13 +178,27 @@ def borrow_return(request):
                 context['message'] = 'The requested book has been borrowed by the other one'
 
         else:
-            try:
-                book = Book.objects.get(id=request.POST['book_id'],borrower_id=request.COOKIES.get('userid'))
-                book.borrower_id = 0
-                book.save()
-                context['message'] = 'You have successfully returned the book'
-            except:
-                context['message'] = 'You currently do not have this book borrowed or you have returned it already'
+            # try:
+            book = Book.objects.get(id=request.POST['book_id'],borrower_id=request.COOKIES.get('userid'))
+            book.borrower_id = 0
+            book.save()
+
+            reservations = Reservation.objects.filter(book_name=book.name, is_book_valid=False, is_finished=False)
+
+            if len(reservations) > 0:
+                time_now = datetime.datetime.now()
+                time = (time_now + datetime.timedelta(days=7)).strftime("%Y-%m-%d")
+
+                reservation = reservations[0]
+                reservation.is_book_valid = True
+                reservation.book_id = book.id
+                reservation.location = book.location
+                reservation.valid_date = time
+                reservation.save()
+
+            context['message'] = 'You have successfully returned the book'
+            # except:
+            #     context['message'] = 'You currently do not have this book borrowed or you have returned it already'
 
     template = loader.get_template('bbs/client/Borrow&ReturnResult.html')
     return HttpResponse(template.render(context,request))
@@ -297,6 +312,29 @@ def reservations_borrow(request):
         except:
             context['message'] = 'Your reservation is failed. Please apply again.'
 
+
+    context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
+
+    template = loader.get_template('bbs/client/Reservations.html')
+    return HttpResponse(template.render(context, request))
+
+
+def reservation_generate(request):
+    context = {}
+    if request.method != 'POST':
+        return HttpResponse(status=404)
+    else:
+        try:
+            reservation = Reservation(
+                borrower_id=request.COOKIES.get('userid'),
+                book_name=request.POST['book_name'],
+                is_book_valid=False,
+                is_finished=False
+            )
+            reservation.save()
+            context['message'] = "Success!"
+        except:
+            context['message'] = 'Your reservation is failed. Please apply again.'
 
     context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
 

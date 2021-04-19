@@ -65,7 +65,7 @@ class Reservation(models.Model):
     book_name = models.CharField(max_length=30)
     is_book_valid = models.BooleanField(default=False)
     book_id = models.IntegerField(null=True)
-    location = models.CharField(max_length=50)
+    location = models.CharField(max_length=50, null=True)
     valid_date = models.DateField(null=True)
     is_finished = models.BooleanField(default=False)
 

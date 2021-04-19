@@ -168,10 +168,19 @@
                                 {% endfor %}
 
                             </ul>
+
+
+
                             {% if valid == False %}
-                                <button class="btn btn-primary" type="submit">
-                                    Reserve This Book
-                                </button>
+                                <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../reservation_generate/" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="book_name" value="{{ book_name }}">
+
+                                    <button class="btn btn-primary" type="submit">
+                                        Reserve This Book
+                                    </button>
+                                </form>
+
                             {% endif %}
 
 

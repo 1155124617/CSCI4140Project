@@ -17,5 +17,6 @@ urlpatterns = [
     path('client/booktransferaccept/',views.book_transfer_accept,name="booktransferaccept"),
     path('client/booktransferrequest/',views.book_transfer_request,name="booktransferrequest"),
     path('client/reservations/', views.reservations, name='reservations'),
-    path('client/reservation_borrow/', views.reservations_borrow, name='reservation_borrow')
+    path('client/reservation_borrow/', views.reservations_borrow, name='reservation_borrow'),
+    path('client/reservation_generate/', views.reservation_generate, name='reservation_generate'),
 ]

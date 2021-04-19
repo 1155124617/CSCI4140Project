@@ -3,7 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="f5d1ee00-fa0e-4b63-98a0-22bf37514905" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bbs/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bbs/templates/bbs/client/Reservations.html" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/templates/bbs/client/Reservations.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bbs/templates/bbs/client/RetrievalResult.html" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/templates/bbs/client/RetrievalResult.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bbs/templates/bbs/client/UserBorrow&amp;Return.html" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/templates/bbs/client/UserBorrow&amp;Return.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bbs/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bbs/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bbs/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
@@ -87,6 +91,7 @@
       <workItem from="1617864046890" duration="3005000" />
       <workItem from="1617867066606" duration="11284000" />
       <workItem from="1618666336046" duration="7646000" />
+      <workItem from="1618845140999" duration="2002000" />
     </task>
     <task id="LOCAL-00001" summary="set up database and finished init test">
       <created>1617867398199</created>
@@ -130,7 +135,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618823666190</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="add borrow button in search page and reserve button(still no action)">
+      <created>1618835304927</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1618835304927</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -155,6 +167,7 @@
     <MESSAGE value="remove django google maps" />
     <MESSAGE value="show users current location" />
     <MESSAGE value="add reservation page" />
-    <option name="LAST_COMMIT_MESSAGE" value="add reservation page" />
+    <MESSAGE value="add borrow button in search page and reserve button(still no action)" />
+    <option name="LAST_COMMIT_MESSAGE" value="add borrow button in search page and reserve button(still no action)" />
   </component>
 </project>
