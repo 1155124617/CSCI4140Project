@@ -245,7 +245,7 @@ def book_transfer_request(request):
             request_time = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))
             
             #request_location = get_geolocation_for_ip(get_client_ip(request))
-            request_location = "default"
+            request_location = request.POST['Location']
 
             request_id = request.COOKIES.get('userid')
 
@@ -269,28 +269,3 @@ def book_transfer_request(request):
         template = loader.get_template("bbs/client/BookTransferAccept.html")
         return HttpResponse(template.render(context,request))
 
-
-
-def get_client_ip(request):
-    """x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    print(ip)"""
-    """get the local network ip, not loopback 127.*"""
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(('1.1.1.1',80))
-    ip = s.getsockname()[0]
-    s.close()
-    print(ip)
-    return ip
-
-
-def get_geolocation_for_ip(ip):
-    url = f"http://api.ipstack.com/{ip}?access_key=85ff54066f8dc0da257a663731051620"
-    print(url)
-    response = requests.get(url)
-    print(response)
-    response.raise_for_status()
-    return response.json()
