@@ -148,15 +148,33 @@
                         <div>
                             <ul class="list-group">
                                 {% for book in books %}
-                                <li class="list-group-item list-group-item-success"> Book name : {{ book.name }}</li>
-                                <li class="list-group-item list-group-item-secondary"> Book ID :  {{ book.id }}</li>
-                                <li class="list-group-item list-group-item-info"> Book Description : {{ book.description }}</li>
-                                <li class="list-group-item list-group-item-warning"> Book Location : {{ book.location }}</li>
-                                <li class="list-group-item list-group-item-danger"> Book Borrower's ID : {{ book.borrower_id }}</li>
-                                <li class="list-group-item list-group-item-primary"> Book is public : {{ book.is_public }}</li>
-                                <li class="list-group-item list-group-item-dark"></li>
+                                    <li class="list-group-item list-group-item-success"> Book name : {{ book.name }}</li>
+                                    <li class="list-group-item list-group-item-secondary"> Book ID :  {{ book.id }}</li>
+                                    <li class="list-group-item list-group-item-info"> Book Description : {{ book.description }}</li>
+                                    <li class="list-group-item list-group-item-warning"> Book Location : {{ book.location }}</li>
+                                    <li class="list-group-item list-group-item-danger"> Book Borrower's ID : {{ book.borrower_id }}</li>
+                                    <li class="list-group-item list-group-item-primary"> Book is public : {{ book.is_public }}</li>
+                                    <li class="list-group-item list-group-item-dark"></li>
+                                    {% if book.borrower_id == 0 %}
+                                        <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../borrow&return/" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="book_id" value={{ book.id }}>
+                                            <input type="hidden" name="form_method" value='Borrow'>
+                                            <button class="btn btn-primary" type="submit">
+                                                Borrow
+                                            </button>
+                                        </form>
+                                    {% endif %}
                                 {% endfor %}
+
                             </ul>
+                            {% if valid == False %}
+                                <button class="btn btn-primary" type="submit">
+                                    Reserve This Book
+                                </button>
+                            {% endif %}
+
+
                         </div>
                         <a href = '../BookInformationRetrieval/'>Start a new search</a>
                     </div>

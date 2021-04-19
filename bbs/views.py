@@ -119,6 +119,7 @@ def look_up_books(request):
                 else:
                     context['message'] = 'Successfully find the book with id ' + request.POST['book_id']
                     context['books'] = books
+
                     template = loader.get_template('bbs/client/RetrievalResult.html')
                     return HttpResponse(template.render(context,request))
 
@@ -131,6 +132,7 @@ def look_up_books(request):
                 else:
                     context['message'] = 'Successfully find the book with name ' + request.POST['book_name'] + " and location " + request.POST['book_location']
                     context['books'] = books
+
                     template = loader.get_template('bbs/client/RetrievalResult.html')
                     return HttpResponse(template.render(context,request))
 
@@ -143,6 +145,13 @@ def look_up_books(request):
                 else:
                     context['message'] = 'Successfully find the book with name ' + request.POST['book_name']
                     context['books'] = books
+
+                    context['valid'] = False
+                    for book in books:
+                        if book.borrower_id == 0:
+                            context['valid'] = True
+                            break
+
                     template = loader.get_template('bbs/client/RetrievalResult.html')
                     return HttpResponse(template.render(context,request))
 
