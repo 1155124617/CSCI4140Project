@@ -289,7 +289,7 @@ def reservations(request):
 
     context['reservations'] = reservations
     if len(reservations) == 0:
-        context['message'] = "You don't have a reservation"
+        context['message'] = "You don't have a valid reservation"
     else:
         context['message'] = "Below are reservation(s) that you have"
 
