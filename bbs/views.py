@@ -2,7 +2,6 @@ from django.shortcuts import render
 from .models import Client
 from .models import Book
 from .models import TransferRequest
-from .models import Transfer
 from .models import Reservation
 from django.http import HttpResponse
 from django.template import loader
@@ -12,9 +11,8 @@ from django.shortcuts import redirect
 import requests
 import time
 import datetime
-from bs4 import BeautifulSoup
+
 import socket
-import sqlite3
 
 def index(request):
     return HttpResponse("Hello, world. You're at the bbs index.")
@@ -121,6 +119,7 @@ def look_up_books(request):
                 else:
                     context['message'] = 'Successfully find the book with id ' + request.POST['book_id']
                     context['books'] = books
+
                     template = loader.get_template('bbs/client/RetrievalResult.html')
                     return HttpResponse(template.render(context,request))
 
@@ -133,6 +132,7 @@ def look_up_books(request):
                 else:
                     context['message'] = 'Successfully find the book with name ' + request.POST['book_name'] + " and location " + request.POST['book_location']
                     context['books'] = books
+
                     template = loader.get_template('bbs/client/RetrievalResult.html')
                     return HttpResponse(template.render(context,request))
 
@@ -145,6 +145,14 @@ def look_up_books(request):
                 else:
                     context['message'] = 'Successfully find the book with name ' + request.POST['book_name']
                     context['books'] = books
+
+                    context['valid'] = False
+                    for book in books:
+                        if book.borrower_id == 0:
+                            context['valid'] = True
+                            break
+                    context['book_name'] = request.POST['book_name']
+
                     template = loader.get_template('bbs/client/RetrievalResult.html')
                     return HttpResponse(template.render(context,request))
 
@@ -170,13 +178,27 @@ def borrow_return(request):
                 context['message'] = 'The requested book has been borrowed by the other one'
 
         else:
-            try:
-                book = Book.objects.get(id=request.POST['book_id'],borrower_id=request.COOKIES.get('userid'))
-                book.borrower_id = 0
-                book.save()
-                context['message'] = 'You have successfully returned the book'
-            except:
-                context['message'] = 'You currently do not have this book borrowed or you have returned it already'
+            # try:
+            book = Book.objects.get(id=request.POST['book_id'],borrower_id=request.COOKIES.get('userid'))
+            book.borrower_id = 0
+            book.save()
+
+            reservations = Reservation.objects.filter(book_name=book.name, is_book_valid=False, is_finished=False)
+
+            if len(reservations) > 0:
+                time_now = datetime.datetime.now()
+                time = (time_now + datetime.timedelta(days=7)).strftime("%Y-%m-%d")
+
+                reservation = reservations[0]
+                reservation.is_book_valid = True
+                reservation.book_id = book.id
+                reservation.location = book.location
+                reservation.valid_date = time
+                reservation.save()
+
+            context['message'] = 'You have successfully returned the book'
+            # except:
+            #     context['message'] = 'You currently do not have this book borrowed or you have returned it already'
 
     template = loader.get_template('bbs/client/Borrow&ReturnResult.html')
     return HttpResponse(template.render(context,request))
@@ -185,22 +207,18 @@ def borrow_return(request):
 def book_transfer(request):
     context = {}
     context['userid'] = "User ID : " + request.COOKIES.get('userid')
-    books = Book.objects.filter(borrower_id=request.COOKIES.get('userid'),is_public=True)
+    books = Book.objects.filter(borrower_id=request.COOKIES.get('userid'))
+    
     req = set()
     flag = 0
     for book in books:
-        print(book.name)
-        result = TransferRequest.objects.filter(book_name=book.name).exclude(borrower_id=request.COOKIES['userid'])
+        result = TransferRequest.objects.filter(book_name=book.name)
         if len(result) != 0:
-            try:
-                print('Here')
-                transfer = Transfer.objects.get(book_id = book.id).exclude(borrower_confirm=True,lender_confirm=True)
-            except:
-                if flag == 0:
-                    req = result
-                    flag += 1
-                else:
-                    req |= result
+            if flag == 0:
+                req = result
+                flag += 1
+            else:
+                req.join(result)
     context['requests'] = req
 
     if len(req) != 0:
@@ -219,25 +237,10 @@ def book_transfer_accept(request):
     else:
         try:
             req = TransferRequest.objects.get(id=request.POST['request_id'])
-            new_transfer = Transfer(
-                transfer_time = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())),
-                borrower_id = req.borrower_id,
-                lender_id = request.COOKIES.get('userid'),
-                book_id = Book.objects.filter(
-                    name = req.book_name, 
-                    borrower_id = request.COOKIES.get('userid'),
-                    is_public=True
-                )[:1].get().id,
-                img = "NULL",
-                borrower_confirm = False,
-                lender_confirm = False
-            )
-            new_transfer.save()
             req.delete()
             context['message'] = "Accept Successfully!"
-        except Exception as e:
-            #context['message'] = "Accept failed"
-            context['message'] = e
+        except:
+            context['message'] = "The request id doesn't exit!"
         
         template = loader.get_template("bbs/client/BookTransferAccept.html")
         return HttpResponse(template.render(context,request))
@@ -276,7 +279,7 @@ def book_transfer_request(request):
 
         template = loader.get_template("bbs/client/BookTransferAccept.html")
         return HttpResponse(template.render(context,request))
-
+        
 
 def book_transfer_confirmation(request):
     context = {}

@@ -4,7 +4,8 @@ from.models import (
     Admin,
     Book,
     Transfer,
-    TransferRequest
+    TransferRequest,
+    Reservation
 )
 # Register your models here.
 admin.site.register(Client)
@@ -12,3 +13,5 @@ admin.site.register(Admin)
 admin.site.register(Book)
 admin.site.register(Transfer)
 admin.site.register(TransferRequest)
+admin.site.register(Reservation)
+
