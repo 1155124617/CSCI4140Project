@@ -223,11 +223,11 @@ def book_transfer_accept(request):
                 transfer_time = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())),
                 borrower_id = req.borrower_id,
                 lender_id = request.COOKIES.get('userid'),
-                book_id = Book.objects.get(
+                book_id = Book.objects.filter(
                     name = req.book_name, 
                     borrower_id = request.COOKIES.get('userid'),
                     is_public=True
-                ).id,
+                )[:1].get().id,
                 img = "NULL",
                 borrower_confirm = False,
                 lender_confirm = False
@@ -236,7 +236,8 @@ def book_transfer_accept(request):
             req.delete()
             context['message'] = "Accept Successfully!"
         except Exception as e:
-            context['message'] = "Accept failed"
+            #context['message'] = "Accept failed"
+            context['message'] = e
         
         template = loader.get_template("bbs/client/BookTransferAccept.html")
         return HttpResponse(template.render(context,request))
