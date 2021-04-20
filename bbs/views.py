@@ -3,6 +3,7 @@ from .models import Client
 from .models import Book
 from .models import TransferRequest
 from .models import Transfer
+from .models import Reservation
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404,render
@@ -10,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 import requests
 import time
+import datetime
 from bs4 import BeautifulSoup
 import socket
 import sqlite3
@@ -187,10 +189,12 @@ def book_transfer(request):
     req = set()
     flag = 0
     for book in books:
-        result = TransferRequest.objects.filter(book_name=book.name)
+        print(book.name)
+        result = TransferRequest.objects.filter(book_name=book.name).exclude(borrower_id=request.COOKIES['userid'])
         if len(result) != 0:
             try:
-                transfer = Transfer.objects.get(book_id = book.id)
+                print('Here')
+                transfer = Transfer.objects.get(book_id = book.id).exclude(borrower_confirm=True,lender_confirm=True)
             except:
                 if flag == 0:
                     req = result
@@ -326,3 +330,63 @@ def book_transfer_confirmation(request):
     template = loader.get_template("bbs/client/BookTransferConfirmation.html")
     return HttpResponse(template.render(context,request))
     
+
+def reservations(request):
+    context = {}
+    context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
+    d = datetime.date.today()
+    reservations = Reservation.objects.filter(borrower_id=request.COOKIES.get('userid'), is_finished=False, valid_date__gte=d)
+
+    context['reservations'] = reservations
+    if len(reservations) == 0:
+        context['message'] = "You don't have a valid reservation"
+    else:
+        context['message'] = "Below are reservation(s) that you have"
+
+    template = loader.get_template('bbs/client/Reservations.html')
+    return HttpResponse(template.render(context, request))
+
+def reservations_borrow(request):
+    context = {}
+    if request.method != 'POST':
+        return HttpResponse(status=404)
+    else:
+        try:
+            reservation = Reservation.objects.get(id=int(request.POST['reservation_id']))
+            reservation.is_finished = True
+            reservation.save()
+            book = Book.objects.get(id=reservation.book_id)
+            book.borrower_id = request.COOKIES.get('userid')
+            book.save()
+            context['message'] = "Success!"
+        except:
+            context['message'] = 'Your reservation is failed. Please apply again.'
+
+
+    context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
+
+    template = loader.get_template('bbs/client/Reservations.html')
+    return HttpResponse(template.render(context, request))
+
+
+def reservation_generate(request):
+    context = {}
+    if request.method != 'POST':
+        return HttpResponse(status=404)
+    else:
+        try:
+            reservation = Reservation(
+                borrower_id=request.COOKIES.get('userid'),
+                book_name=request.POST['book_name'],
+                is_book_valid=False,
+                is_finished=False
+            )
+            reservation.save()
+            context['message'] = "Success!"
+        except:
+            context['message'] = 'Your reservation is failed. Please apply again.'
+
+    context['userid'] = 'UserID : ' + request.COOKIES.get('userid')
+
+    template = loader.get_template('bbs/client/Reservations.html')
+    return HttpResponse(template.render(context, request))

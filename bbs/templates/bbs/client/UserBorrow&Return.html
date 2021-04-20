@@ -131,7 +131,7 @@
                                 <li class="nav-item"> <a class="nav-link" href="../UserBorrow&Return/">Book Borrow & Return</a></li>
                                 <li class="nav-item"> <a class="nav-link" href="../booktransfer/">Book Transfer among Users</a></li>
                                 <li class="nav-item"> <a class="nav-link" href="../BookInformationRetrieval/">Book Information Retrieval</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="chatboard.html">Book Reservation</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="../reservations/">Book Reservation</a></li>
                             </ul>
                         </div>
                     </li>
@@ -163,7 +163,7 @@
                             <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../borrow&return/" method="POST">
                                 {% csrf_token %}
                                 <span class="login100-form-title">
-                                    <h4 class="text-info">Book Borrow & Return Form</h4>
+                                    <h4 class="text-info">Book Return Form</h4>
                                 </span>
             
                                 <div class="form-group" data-validate = "Please enter again">
@@ -171,20 +171,11 @@
                                         <span class="focus-input100"></span>
                                 </div>
             
-                                <div class="form-group" data-validate = "Please enter again">
-                                    <label for="book_location">Please choose to borrow or to return</label>
-                                    <select class="form-control" name="form_method" placeholder="BOOK LOCATION">
-                                        <option>Borrow</option>
-                                        <option>Return</option>
-                                        <span class="focus-input100"></span>
-                                    </select>
-                                </div>
-            
                                 <div class="text-right p-t-13 p-b-23">
                                 </div>
-            
+                                <input type="hidden" name = form_method value="Return">
                                 <button class="btn btn-primary" type="submit">
-                                    Submit the Form
+                                    Return
                                 </button>
                             </form>
                         </div>
@@ -232,4 +223,3 @@
 </body>
 
 </html>
-

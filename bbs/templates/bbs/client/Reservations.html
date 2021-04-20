@@ -21,7 +21,6 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="{% static 'mainpage/css/vertical-layout-light/style.css' %}">
     <!-- endinject -->
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -50,6 +49,7 @@
         })
     </script>
     <script src="{% static 'mainpage/js/Script1.js' %}"></script>
+    <script src="{% static 'mainpage/buttons.js' %}"></script>
 </head>
 <body>
     <div class="container-scroller">
@@ -140,55 +140,45 @@
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <h3 class="font-weight-bold">Welcome to look up books </h3>
+                    <h3 class="font-weight-bold">Welcome to Book Borrow and Return System! </h3>
                     <div>
                         <div style="text-align:center;clear:both">
                         </div>
                         <div style="text-align:center">
                         </div>
-                        <div>
                             {% if message %}
                             <h4 class="text-danger">{{ message }}</h4>
                             {% endif %}
-                            <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../lookupbooks/" method="POST">
-                                {% csrf_token %}
-                                <span class="login100-form-title">
-                                    <h4 class="text-info">Book Information Retrieval</h4>
-                                </span>
-            
-                                <div class="form-group" data-validate="Please enter again">
-                                    <input class="form-control" type="text" name="book_name" placeholder="BOOK NAME (Will search name together with location)">
-                                        <span class="focus-input100"></span>
-                                </div>
-            
-                                <div class="form-group" data-validate = "Please enter again">
-                                    <input class="form-control" type="text" name="book_id" placeholder="BOOK ID(Will search only by ID)">
-                                        <span class="focus-input100"></span>
-                                </div>
-            
-                                <div class="form-group" data-validate = "Please enter again">
-                                    <label for="book_location">Location:</label>
-                                    <select class="form-control" name="book_location" placeholder="BOOK LOCATION">
-                                        <option>N/A</option>
-                                        <option>University Library 1st Floor</option>
-                                        <option>University Library 2nd Floor</option>
-                                        <option>University Library 3rd Floor</option>
-                                        <option>University Library 4th Floor</option>
-                                        <option>ChungChi Library 3rd Floor</option>
-                                        <option>ChungChi Library 4th Floor</option>
-                                        <option>United Library 4th Floor</option>
-                                        <option>New Asian Library 4th Floor</option>
-                                        <span class="focus-input100"></span>
-                                    </select>
-                                </div>
-            
-                                <div class="text-right p-t-13 p-b-23">
-                                </div>
-            
-                                <button class="btn btn-primary" type="submit">
-                                    Retrieve Information
-                                </button>
-                            </form>
+
+                            <ul class="list-group">
+                                {% for reservation in reservations %}
+                                    <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="../reservation_borrow/" method="POST">
+                                        {% csrf_token %}
+
+                                        <li class="list-group-item list-group-item-success"> Book name : {{ reservation.book_name }}</li>
+                                        <li class="list-group-item list-group-item-secondary"> Valid Book :  {{ reservation.is_book_valid }}</li>
+                                        {% if reservation.is_book_valid == True %}
+                                            <li class="list-group-item list-group-item-info"> Book Id : {{ reservation.book_id }}</li>
+                                            <li class="list-group-item list-group-item-warning"> Book Location : {{ reservation.location }}</li>
+                                            <li class="list-group-item list-group-item-danger"> Reservation DDL : {{ reservation.valid_date }}</li>
+                                        {% endif %}
+
+                                        <input type="hidden" name="reservation_id" value={{ reservation.id }}>
+                                        <button class="btn btn-primary" type="submit">
+                                            Borrow
+                                        </button>
+                                    </form>
+
+
+
+
+
+
+
+
+                                {% endfor %}
+                            </ul>
+
                         </div>
                     </div>
                 </div>
@@ -234,4 +224,3 @@
 </body>
 
 </html>
-
