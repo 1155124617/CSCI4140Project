@@ -3,6 +3,7 @@ from .models import Client
 from .models import Book
 from .models import TransferRequest
 from .models import Reservation
+from .models import Transfer
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404,render
@@ -11,6 +12,7 @@ from django.shortcuts import redirect
 import requests
 import time
 import datetime
+import sqlite3
 
 import socket
 
@@ -237,6 +239,20 @@ def book_transfer_accept(request):
     else:
         try:
             req = TransferRequest.objects.get(id=request.POST['request_id'])
+            new_transfer = Transfer(
+                transfer_time = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())),
+                borrower_id = req.borrower_id,
+                lender_id = request.COOKIES.get('userid'),
+                book_id = Book.objects.filter(
+                    name = req.book_name, 
+                    borrower_id = request.COOKIES.get('userid'),
+                    is_public=True
+                )[:1].get().id,
+                img = "NULL",
+                borrower_confirm = False,
+                lender_confirm = False
+            )
+            new_transfer.save()
             req.delete()
             context['message'] = "Accept Successfully!"
         except:
@@ -279,7 +295,7 @@ def book_transfer_request(request):
 
         template = loader.get_template("bbs/client/BookTransferAccept.html")
         return HttpResponse(template.render(context,request))
-        
+
 
 def book_transfer_confirmation(request):
     context = {}
@@ -333,7 +349,7 @@ def book_transfer_confirmation(request):
 
     template = loader.get_template("bbs/client/BookTransferConfirmation.html")
     return HttpResponse(template.render(context,request))
-    
+
 
 def reservations(request):
     context = {}
@@ -394,3 +410,4 @@ def reservation_generate(request):
 
     template = loader.get_template('bbs/client/Reservations.html')
     return HttpResponse(template.render(context, request))
+
