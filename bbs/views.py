@@ -209,7 +209,7 @@ def borrow_return(request):
 def book_transfer(request):
     context = {}
     context['userid'] = "User ID : " + request.COOKIES.get('userid')
-    books = Book.objects.filter(borrower_id=request.COOKIES.get('userid'))
+    books = Book.objects.filter(borrower_id=request.COOKIES.get('userid'), is_public = True)
     
     req = set()
     flag = 0
